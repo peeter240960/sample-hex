@@ -1,0 +1,39 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../../../node_modules/@prisma/client/patients"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Otp {
+  id Int @id @default(autoincrement())
+
+  ipAddress String
+  phone     String
+
+  reference String @unique @default(uuid())
+
+  createdAt DateTime @default(now())
+  expiredAt DateTime
+
+  verifiedAt DateTime?
+
+  otp String
+
+  @@index([ipAddress, createdAt])
+  @@index([phone, createdAt])
+}
+
+model OtpBlacklist {
+  id Int @id @default(autoincrement())
+
+  ipAddress String
+
+  createdAt DateTime @default(now())
+  expiredAt DateTime
+
+  @@index([ipAddress, expiredAt])
+}
